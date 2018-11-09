@@ -1,0 +1,40 @@
+service: astro-helpers
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  profile: admin
+  region: us-east-1
+  versionFunctions: false
+  environment:
+    DATE: '2018-11-05'
+    REGION: us-east-1
+  iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+    - "dynamodb:*"
+    Resource:
+    - "*"
+  tags:
+    App: Astro
+
+package:
+  exclude:
+  - node_modules/**
+  - __pycache__
+  - package-lock.json
+  - .idea
+  - .DS_Store
+
+
+functions:
+  handle:
+    handler: handler.handle
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+plugins:
+- serverless-python-requirements

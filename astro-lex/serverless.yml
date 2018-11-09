@@ -1,0 +1,46 @@
+service: astro-bot
+
+
+provider:
+  name: aws
+  runtime: python3.6
+  profile: admin
+  region: us-east-1
+  versionFunctions: false
+  stage: dev
+  environment:
+    REGION: us-east-1
+    PANCHANGA_FUNCTION_TO_INVOKE: astro-dev-panchang
+    ALLOWED_INTENTS_FOR_CALENDAR: TodayPanchang
+  tags:
+    App: Astro
+  iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+    - "dynamodb:*"
+    Resource:
+    - "*"
+  - Effect: "Allow"
+    Action:
+    - "lambda:*"
+    Resource:
+    - "*"
+
+package:
+  exclude:
+  - node_modules/**
+  - __pycache__
+  - package-lock.json
+  - .idea
+  - .DS_Store
+
+functions:
+  lex:
+    handler: handler.lex
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+plugins:
+- serverless-python-requirements
