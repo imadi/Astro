@@ -1,5 +1,9 @@
-from handler import dynamodb
+import os
+import boto3
+
 from utils.EphemerisUtils import days, dates, stars, months
+
+dynamodb = boto3.resource('dynamodb', region_name=os.environ['REGION'])
 
 
 def get_day_name(julian_day):

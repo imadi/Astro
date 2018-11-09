@@ -4,25 +4,25 @@ from utils.WeatherEntity import WeatherEntity
 
 
 def handle(event, julian_day, place):
-    global json_response
+    json_response = {}
     slots = event["currentIntent"]["slots"]
-    entity = slots["entity"]
-    if entity == WeatherEntity.SUN_RISE:
+    entity = slots["WeatherEntity"].lower()
+    if entity == WeatherEntity.SUN_RISE.value:
         json_response = {
             "Greeting": greeting(place),
             "Sunrise": join_list(sunrise(julian_day, place)[1], COLON_SEPARATOR)
         }
-    elif entity == WeatherEntity.SUN_SET:
+    elif entity == WeatherEntity.SUN_SET.value:
         json_response = {
             "Greeting": greeting(place),
             "Sunset": join_list(sunset(julian_day, place)[1], COLON_SEPARATOR)
         }
-    elif entity == WeatherEntity.MOON_RISE:
+    elif entity == WeatherEntity.MOON_RISE.value:
         json_response = {
             "Greeting": greeting(place),
             "Moonrise": join_list(moonrise(julian_day, place), COLON_SEPARATOR)
         }
-    elif entity == WeatherEntity.MOON_SET:
+    elif entity == WeatherEntity.MOON_SET.value:
         json_response = {
             "Greeting": greeting(place),
             "Moonset": join_list(moonset(julian_day, place), COLON_SEPARATOR)
