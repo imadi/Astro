@@ -120,6 +120,6 @@ def get_date_from_text(date_utterance, place):
         date = (get_current_date(place)).strftime("%Y-%m-%d")
     elif date_utterance.lower() == "tomorrow":
         date = (get_current_date(place) + timedelta(days=1)).strftime("%Y-%m-%d")
-    elif date_utterance.lower == "yesterday":
+    elif date_utterance.lower() == "yesterday":
         date = (get_current_date(place) - timedelta(days=1)).strftime("%Y-%m-%d")
     return date

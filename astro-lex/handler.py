@@ -1,10 +1,12 @@
 import json
-import boto3
 import os
+import re
 import traceback
+
+import boto3
+
 from utils.Constants import ERROR_MESSAGE
 from utils.LexHelpers import *
-import re
 
 lambda_client = boto3.client('lambda')
 
@@ -29,10 +31,8 @@ def lex(event, context):
                     "content": "Invalid location '%s'" % location
                 })
             if date is None:
-                return close(session_attributes, 'Fulfilled', {
-                    "contentType": 'PlainText',
-                    "content": "Invalid date."
-                })
+                return elicit_slot(session_attributes, intent_name, slots, "Date",
+                                   build_message("Please enter the date"), None)
             if intent_name in os.environ["ALLOWED_INTENTS_FOR_CALENDAR"].split(","):
                 supported_language_names = [calendar_language["Language"] for calendar_language in
                                             calendars_language_list]
@@ -89,6 +89,10 @@ def format_close_response(json_resp):
         response_string += "\n Sunrise : %s" % json_resp.get("Sunrise")
     if json_resp.get("Sunset"):
         response_string += "\n Sunset : %s" % json_resp.get("Sunset")
+    if json_resp.get("Moonrise"):
+        response_string += "\n Moonrise : %s" % json_resp.get("Moonrise")
+    if json_resp.get("Moonset"):
+        response_string += "\n Moonset : %s" % json_resp.get("Moonset")
     return response_string
 
 
