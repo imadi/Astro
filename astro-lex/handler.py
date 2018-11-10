@@ -42,6 +42,13 @@ def lex(event, context):
                     return elicit_slot(session_attributes, event["currentIntent"]["name"], slots, "Calendar",
                                        build_message("Please select the calendar to use"),
                                        build_response_card("Calendars", "Supported Calendars", supported_calendars))
+            elif intent_name == "WeatherInfo":
+                if not (slots.get("WeatherEntity") or (slots.get("GalaxySlot") and slots.get("Action"))):
+                    return elicit_slot(session_attributes, intent_name, slots, "WeatherEntity",
+                                       build_message(
+                                           "What do you want to know about? For example sunrise,sunset e.t.c"),
+                                       None)
+                slots["WeatherEntity"] = get_weather_entity(slots)
             return delegate(session_attributes, slots)
         if calendar_to_use:
             calendar_to_use = next(
@@ -61,6 +68,11 @@ def lex(event, context):
             "contentType": 'PlainText',
             "content": ERROR_MESSAGE
         })
+
+
+def get_weather_entity(slots):
+    return slots.get("WeatherEntity") if slots.get("WeatherEntity") else \
+        slots.get("GalaxySlot") + slots.get("Action")
 
 
 def get_date_from_ip(date, event, slots, slots_details):
