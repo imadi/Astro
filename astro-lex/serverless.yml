@@ -11,7 +11,7 @@ provider:
   environment:
     REGION: us-east-1
     PANCHANGA_FUNCTION_TO_INVOKE: astro-dev-panchang
-    ALLOWED_INTENTS_FOR_CALENDAR: TodayPanchang
+    ALLOWED_INTENTS_FOR_CALENDAR: TodayPanchang,AstroInfo
   tags:
     App: Astro
   iamRoleStatements:

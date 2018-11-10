@@ -1,7 +1,8 @@
 import json
+import os
 import swisseph as swe
 
-from handlers.WeatherHandler import handle
+from handlers import WeatherHandler, AstroHandler
 from utils.AstroUtils import get_day_name, get_month_name, get_star_name, get_date_name
 from utils.Constants import COLON_SEPARATOR
 from utils.EphemerisUtils import get_geo_location
@@ -14,17 +15,18 @@ gregorian_to_julian_day = lambda date: swe.julday(date.year, date.month, date.da
 
 
 def panchang(event, context):
-    global json_response
     print(json.dumps(event))
-    place = get_geo_location(event.get("location"))
+    place = get_geo_location(event.get("location") if event.get("location") else os.environ['DEFAULT_LOCATION'])
     received_event = event["event"]
     intent_name = received_event["currentIntent"]["name"]
     if place is None:
         return {"error_message": "Invalid Location %s" % (event.get("location"))}
     julian_day = gregorian_to_julian_day(get_date(place, event.get("date")))
-    if intent_name == Intent.WEATHER.value:
-        return handle(received_event, julian_day, place)
     language_code = event.get("language_code")
+    if intent_name == Intent.WEATHER.value:
+        return WeatherHandler.handle(received_event, julian_day, place)
+    elif intent_name == Intent.ASTRO.value:
+        return AstroHandler.handle(received_event, julian_day, place, language_code)
     day_str = get_day_name(julian_day)
     month_str = get_month_name(julian_day, place)
     date_str = get_date_name(julian_day, place)

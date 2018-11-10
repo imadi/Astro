@@ -9,6 +9,7 @@ provider:
   stage: dev
   environment:
     REGION: us-east-1
+    DEFAULT_LOCATION: INDIA
   iamRoleStatements:
   - Effect: "Allow"
     Action:
