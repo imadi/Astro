@@ -6,7 +6,8 @@ import traceback
 import boto3
 
 from utils.Constants import ERROR_MESSAGE
-from utils.LexHelpers import *
+from utils.LexHelpers import get_geo_location, build_message, build_response_options, build_response_card, \
+    get_date_from_text, elicit_slot, delegate, close
 
 lambda_client = boto3.client('lambda')
 
@@ -24,12 +25,12 @@ def lex(event, context):
         location = get_slot_value(slots.get("Location"))
         date = get_slot_value(slots.get("Date"))
         intent_name = event["currentIntent"]["name"]
+        slots_details = event["currentIntent"]["slotDetails"]
+        date = get_date_from_ip(date, event, slots, slots_details)
         if source == "DialogCodeHook":
             if location and get_geo_location(location) is None:
-                return close(session_attributes, 'Fulfilled', {
-                    "contentType": 'PlainText',
-                    "content": "Invalid location '%s'" % location
-                })
+                return elicit_slot(session_attributes, intent_name, slots, "Location",
+                                   build_message("Invalid location '%s'. Please enter the location" % location), None)
             if date is None:
                 return elicit_slot(session_attributes, intent_name, slots, "Date",
                                    build_message("Please enter the date"), None)
@@ -45,7 +46,6 @@ def lex(event, context):
         if calendar_to_use:
             calendar_to_use = next(
                 filter(lambda calendar_lang: calendar_lang["Language"] == calendar_to_use, calendars_language_list))
-        slots_details = event["currentIntent"]["slotDetails"]
         date_utterance = slots_details["Date"]["originalValue"]
         date = get_date_from_text(date_utterance, location)
         event["currentIntent"]["slots"]["Date"] = date
@@ -61,6 +61,17 @@ def lex(event, context):
             "contentType": 'PlainText',
             "content": ERROR_MESSAGE
         })
+
+
+def get_date_from_ip(date, event, slots, slots_details):
+    inp_text = event["inputTranscript"]
+    text_list = re.findall(r"^today|tomorrow|yesterday", inp_text.lower())
+    if len(text_list) > 0:
+        date = slots["Date"] = slots_details["Date"]["originalValue"] = text_list[0]
+    else:
+        slots_details["Date"] = {}
+        slots_details["Date"]["originalValue"] = date
+    return date
 
 
 def invoke_lambda_function(calendar_to_use, location, date, event):
