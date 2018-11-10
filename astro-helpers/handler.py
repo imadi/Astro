@@ -1,14 +1,14 @@
-import os
-
-from handlers import AgeHandler,InformationHandler
+from handlers import AgeHandler, InformationHandler
 from utils.Intent import Intent
+import json
 
 
 def handle(event, context):
+    print(json.dumps(event))
     intent_name = event["currentIntent"]["name"]
     message = ""
     if intent_name == Intent.AGE.value:
-        message = AgeHandler.handle(date=os.environ['DATE'])
+        message = AgeHandler.handle(event)
     elif intent_name == Intent.INFO.value:
         message = InformationHandler.handle(event)
     return close(event["sessionAttributes"], 'Fulfilled', {
