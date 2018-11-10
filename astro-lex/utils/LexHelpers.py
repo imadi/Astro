@@ -1,11 +1,14 @@
+import re
 import ssl
 from datetime import datetime, timedelta
+
 import certifi
 import pytz
 from geopy.geocoders import options, Nominatim
 from pytz import timezone
-from utils.DialogActionType import DialogActionType
 from timezonefinder import TimezoneFinder
+
+from utils.DialogActionType import DialogActionType
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 options.default_ssl_context = ctx
@@ -116,10 +119,10 @@ def get_current_date(city_name):
 
 def get_date_from_text(date_utterance, place):
     date = date_utterance
-    if date_utterance.lower() == "today":
+    if len(re.findall(r"^today", date_utterance.lower())) > 0:
         date = (get_current_date(place)).strftime("%Y-%m-%d")
-    elif date_utterance.lower() == "tomorrow":
+    elif len(re.findall(r"^tomorrow", date_utterance.lower())) > 0:
         date = (get_current_date(place) + timedelta(days=1)).strftime("%Y-%m-%d")
-    elif date_utterance.lower() == "yesterday":
+    elif len(re.findall(r"^yesterday", date_utterance.lower())) > 0:
         date = (get_current_date(place) - timedelta(days=1)).strftime("%Y-%m-%d")
     return date
