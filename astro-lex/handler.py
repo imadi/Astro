@@ -32,8 +32,10 @@ def lex(event, context):
                 return elicit_slot(session_attributes, intent_name, slots, "Location",
                                    build_message("Invalid location '%s'. Please enter the location" % location), None)
             if date is None:
+                message = "Please enter the date. For example you can mention date as today or tomorrow or " \
+                          "2018-11-10 (YYYY-MM-DD) or 20th July 2018"
                 return elicit_slot(session_attributes, intent_name, slots, "Date",
-                                   build_message("Please enter the date"), None)
+                                   build_message(message), None)
             if intent_name in os.environ["ALLOWED_INTENTS_FOR_CALENDAR"].split(","):
                 supported_language_names = [calendar_language["Language"] for calendar_language in
                                             calendars_language_list]
