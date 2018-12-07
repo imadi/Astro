@@ -14,7 +14,7 @@ lambda_client = boto3.client('lambda')
 dynamodb = boto3.resource('dynamodb', region_name=os.environ['REGION'])
 
 
-def lex(event, context):
+def handle(event, context):
     print(json.dumps(event))
     try:
         session_attributes = event["sessionAttributes"]

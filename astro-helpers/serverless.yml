@@ -3,10 +3,9 @@ service: astro-helpers
 provider:
   name: aws
   runtime: python3.6
-  stage: dev
-  profile: admin
+  stage: prod
   region: us-east-1
-  versionFunctions: false
+  versionFunctions: true
   environment:
     DATE: '2018-11-05'
     REGION: us-east-1

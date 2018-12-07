@@ -3,10 +3,9 @@ service: astro
 provider:
   name: aws
   runtime: python3.6
-  profile: admin
   region: us-east-1
-  versionFunctions: false
-  stage: dev
+  versionFunctions: true
+  stage: prod
   environment:
     REGION: us-east-1
     DEFAULT_LOCATION: INDIA

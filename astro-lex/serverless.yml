@@ -4,10 +4,9 @@ service: astro-bot
 provider:
   name: aws
   runtime: python3.6
-  profile: admin
   region: us-east-1
-  versionFunctions: false
-  stage: dev
+  versionFunctions: true
+  stage: prod
   environment:
     REGION: us-east-1
     PANCHANGA_FUNCTION_TO_INVOKE: astro-dev-panchang
