@@ -9,7 +9,7 @@ provider:
   stage: prod
   environment:
     REGION: us-east-1
-    PANCHANGA_FUNCTION_TO_INVOKE: astro-dev-panchang
+    PANCHANGA_FUNCTION_TO_INVOKE: astro-${self:provider.stage}-panchang
     ALLOWED_INTENTS_FOR_CALENDAR: TodayPanchang,AstroInfo
   tags:
     App: Astro
@@ -35,7 +35,7 @@ package:
 
 functions:
   lex:
-    handler: handler.lex
+    handler: handler.handle
 
 custom:
   pythonRequirements:
